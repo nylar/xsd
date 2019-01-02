@@ -1,0 +1,8 @@
+[package]
+name = "xsd"
+version = "0.1.0"
+authors = ["Scott Raine <me@nylar.io>"]
+edition = "2018"
+
+[dependencies]
+roxmltree = "0.4"
