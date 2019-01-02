@@ -10,10 +10,5 @@ pub mod shared;
 pub mod simple_type;
 mod traits;
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+pub use crate::errors::Error;
+pub use crate::parser::{Elements, Parser};

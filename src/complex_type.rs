@@ -189,6 +189,7 @@ impl<'a, 'd> TryFrom<Node<'a, 'd>> for Choice {
 pub struct Attribute {
     pub name: Option<String>,
     pub usage: Usage,
+    pub type_: Option<String>,
 }
 
 impl<'a, 'd> TryFrom<Node<'a, 'd>> for Attribute {
@@ -199,6 +200,10 @@ impl<'a, 'd> TryFrom<Node<'a, 'd>> for Attribute {
 
         if let Some(name) = node.attribute("name") {
             attribute.name = Some(name.to_owned());
+        }
+
+        if let Some(type_) = node.attribute("type") {
+            attribute.type_ = Some(type_.to_owned());
         }
 
         if let Some(usage) = node.attribute("use") {

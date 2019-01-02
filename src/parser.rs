@@ -56,10 +56,6 @@ impl Parser {
         Ok(parser)
     }
 
-    pub fn elements(&self) -> &Vec<Elements> {
-        &self.elements
-    }
-
     fn read_file<P: AsRef<Path>>(file_path: P) -> Result<String, Error> {
         let mut file = File::open(file_path)?;
         let mut contents = String::new();
@@ -74,9 +70,13 @@ impl Parser {
             _ => false,
         }) {
             match node.tag_name().name() {
-                SCHEMA => self
-                    .elements
-                    .push(Elements::Schema(Schema::try_from(node)?)),
+                SCHEMA => {
+                    self.elements
+                        .push(Elements::Schema(Schema::try_from(node)?));
+
+                    self.parse(node)?;
+                }
+
                 IMPORT => {
                     let import = Import::try_from(node)?;
 
@@ -114,16 +114,13 @@ impl Parser {
                 COMPLEX_TYPE => self
                     .elements
                     .push(Elements::ComplexType(ComplexType::try_from(node)?)),
-                // unknown => {
-                //     return Err(crate::errors::Error::UnhandledTag {
-                //         parent: parent_node.tag_name().name().to_owned(),
-                //         tag: unknown.to_owned(),
-                //     })
-                // }
-                _ => (),
+                unknown => {
+                    return Err(crate::errors::Error::UnhandledTag {
+                        parent: parent_node.tag_name().name().to_owned(),
+                        tag: unknown.to_owned(),
+                    })
+                }
             }
-
-            self.parse(node)?;
         }
 
         Ok(())

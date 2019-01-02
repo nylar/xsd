@@ -1,0 +1,24 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+           xmlns:mns="http://example.org/order.xsd"
+           targetNamespace="http://example.org/order.xsd"
+           elementFormDefault="qualified">
+ <xsd:element name="Order" type="mns:OrderType"/>
+ <xsd:complexType name="OrderType">
+  <xsd:sequence>
+   <xsd:element name="ShippingAddress" type="mns:Address" maxOccurs="2"/>
+   <xsd:element name="BillingAddress" type="mns:Address"/>
+  </xsd:sequence>
+  <xsd:attribute name="Date" type="xsd:date"/>
+ </xsd:complexType>
+
+ <xsd:complexType name="Address">
+  <xsd:sequence>
+   <xsd:element name="name" type="xsd:string"/>
+   <xsd:element name="street" type="xsd:string"/>
+   <xsd:element name="city" type="xsd:string"/>
+   <xsd:element name="county" type="xsd:string"/>
+   <xsd:element name="postcode" type="xsd:string"/>
+  </xsd:sequence>
+  <xsd:attribute name="country" type="xsd:NMTOKEN" fixed="GB"/>
+ </xsd:complexType>
+</xsd:schema>

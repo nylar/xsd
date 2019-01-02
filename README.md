@@ -11,7 +11,7 @@ use xsd::parser::{Elements, Parser};
 #[derive(Debug, StructOpt)]
 struct Config {
     /// Path to XSD file
-    #[structopt(short = "p", long = "p")]
+    #[structopt(short = "p", long = "path")]
     file_path: String,
 }
 
