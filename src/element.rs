@@ -13,10 +13,10 @@ pub enum DefaultFixed {
 
 #[derive(Debug, Default, PartialEq)]
 pub struct Element {
-    pub abstract_: bool,
+    pub r#abstract: bool,
     pub block: Option<BlockDefault>,
     pub default_fixed: Option<DefaultFixed>,
-    pub final_: Option<Final>,
+    pub r#final: Option<Final>,
     pub id: Option<String>,
     pub max_occurrences: Option<Occurrence>,
     pub min_occurrences: Option<Occurrence>,
@@ -24,7 +24,7 @@ pub struct Element {
     pub nillable: bool,
     // TODO: ref
     pub substitution_group: Option<String>,
-    pub type_: Option<String>,
+    pub r#type: Option<String>,
 }
 
 impl<'a, 'd> TryFrom<Node<'a, 'd>> for Element {
@@ -34,7 +34,7 @@ impl<'a, 'd> TryFrom<Node<'a, 'd>> for Element {
         let mut element = Element::default();
 
         if let Some(abstract_) = node.attribute("abstract") {
-            element.abstract_ = abstract_ == "true";
+            element.r#abstract = abstract_ == "true";
         }
 
         if let Some(block) = node.attribute("block") {
@@ -52,7 +52,7 @@ impl<'a, 'd> TryFrom<Node<'a, 'd>> for Element {
 
         if let Some(final_) = node.attribute("final") {
             let final_ = Final::from_str(final_)?;
-            element.final_ = Some(final_);
+            element.r#final = Some(final_);
         }
 
         element.id = node.attribute("id").and_then(|id| Some(id.to_owned()));
@@ -81,7 +81,7 @@ impl<'a, 'd> TryFrom<Node<'a, 'd>> for Element {
             .attribute("substitutionGroup")
             .and_then(|sg| Some(sg.to_owned()));
 
-        element.type_ = node.attribute("type").and_then(|ty| Some(ty.to_owned()));
+        element.r#type = node.attribute("type").and_then(|ty| Some(ty.to_owned()));
 
         Ok(element)
     }

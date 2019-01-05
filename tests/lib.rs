@@ -25,7 +25,7 @@ fn parse_xsd1() {
         }),
         xsd::Elements::Element(xsd::element::Element {
             name: Some("Order".to_owned()),
-            type_: Some("mns:OrderType".to_owned()),
+            r#type: Some("mns:OrderType".to_owned()),
             ..Default::default()
         }),
         xsd::Elements::ComplexType(xsd::complex_type::ComplexType {
@@ -34,13 +34,13 @@ fn parse_xsd1() {
                 elements: vec![
                     xsd::element::Element {
                         name: Some("ShippingAddress".to_owned()),
-                        type_: Some("mns:Address".to_owned()),
+                        r#type: Some("mns:Address".to_owned()),
                         max_occurrences: Some(xsd::shared::Occurrence::Limit(2)),
                         ..Default::default()
                     },
                     xsd::element::Element {
                         name: Some("BillingAddress".to_owned()),
-                        type_: Some("mns:Address".to_owned()),
+                        r#type: Some("mns:Address".to_owned()),
                         ..Default::default()
                     },
                 ],
@@ -48,7 +48,7 @@ fn parse_xsd1() {
             }),
             attribute: Some(xsd::complex_type::Attribute {
                 name: Some("Date".to_owned()),
-                type_: Some("xsd:date".to_owned()),
+                r#type: Some("xsd:date".to_owned()),
                 ..Default::default()
             }),
             ..Default::default()
@@ -59,27 +59,27 @@ fn parse_xsd1() {
                 elements: vec![
                     xsd::element::Element {
                         name: Some("name".to_owned()),
-                        type_: Some("xsd:string".to_owned()),
+                        r#type: Some("xsd:string".to_owned()),
                         ..Default::default()
                     },
                     xsd::element::Element {
                         name: Some("street".to_owned()),
-                        type_: Some("xsd:string".to_owned()),
+                        r#type: Some("xsd:string".to_owned()),
                         ..Default::default()
                     },
                     xsd::element::Element {
                         name: Some("city".to_owned()),
-                        type_: Some("xsd:string".to_owned()),
+                        r#type: Some("xsd:string".to_owned()),
                         ..Default::default()
                     },
                     xsd::element::Element {
                         name: Some("county".to_owned()),
-                        type_: Some("xsd:string".to_owned()),
+                        r#type: Some("xsd:string".to_owned()),
                         ..Default::default()
                     },
                     xsd::element::Element {
                         name: Some("postcode".to_owned()),
-                        type_: Some("xsd:string".to_owned()),
+                        r#type: Some("xsd:string".to_owned()),
                         ..Default::default()
                     },
                 ],
@@ -87,7 +87,7 @@ fn parse_xsd1() {
             }),
             attribute: Some(xsd::complex_type::Attribute {
                 name: Some("country".to_owned()),
-                type_: Some("xsd:NMTOKEN".to_owned()),
+                r#type: Some("xsd:NMTOKEN".to_owned()),
                 ..Default::default()
             }),
             ..Default::default()
