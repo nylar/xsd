@@ -18,7 +18,7 @@ struct Config {
 fn main() {
     let config = Config::from_args();
 
-    let parser = Parser::new(config.file_path).unwrap();
+    let parser = Parser::parse(config.file_path).unwrap();
 
     println!(
         "Complex types: {}",
