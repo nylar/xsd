@@ -7,7 +7,7 @@ const WORK_DIR: &'static str = env!("CARGO_MANIFEST_DIR");
 fn parse_xsd1() {
     let path = format!("{}/tests/testdata/xsd1.xml", WORK_DIR);
 
-    let parser = xsd::Parser::new(&path).unwrap();
+    let parser = xsd::Parser::parse(&path).unwrap();
 
     let mut namespaces = HashMap::new();
     namespaces.insert(
@@ -28,7 +28,7 @@ fn parse_xsd1() {
             r#type: Some("mns:OrderType".to_owned()),
             ..Default::default()
         }),
-        xsd::Elements::ComplexType(xsd::complex_type::ComplexType {
+        xsd::Elements::ComplexType(Box::new(xsd::complex_type::ComplexType {
             name: Some("OrderType".to_owned()),
             sequence: Some(xsd::complex_type::Sequence {
                 elements: vec![
@@ -52,8 +52,8 @@ fn parse_xsd1() {
                 ..Default::default()
             }),
             ..Default::default()
-        }),
-        xsd::Elements::ComplexType(xsd::complex_type::ComplexType {
+        })),
+        xsd::Elements::ComplexType(Box::new(xsd::complex_type::ComplexType {
             name: Some("Address".to_owned()),
             sequence: Some(xsd::complex_type::Sequence {
                 elements: vec![
@@ -91,7 +91,7 @@ fn parse_xsd1() {
                 ..Default::default()
             }),
             ..Default::default()
-        }),
+        })),
     ];
 
     assert_eq!(parser.elements, expected);

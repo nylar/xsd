@@ -12,12 +12,12 @@ use crate::simple_type::SimpleType;
 use crate::traits::TryFrom;
 use roxmltree::{Document, Node};
 
-const SCHEMA: &'static str = "schema";
-const IMPORT: &'static str = "import";
-const INCLUDE: &'static str = "include";
-const ELEMENT: &'static str = "element";
-const SIMPLE_TYPE: &'static str = "simpleType";
-const COMPLEX_TYPE: &'static str = "complexType";
+const SCHEMA: &str = "schema";
+const IMPORT: &str = "import";
+const INCLUDE: &str = "include";
+const ELEMENT: &str = "element";
+const SIMPLE_TYPE: &str = "simpleType";
+const COMPLEX_TYPE: &str = "complexType";
 
 #[derive(Debug, PartialEq)]
 pub enum Elements {
@@ -26,7 +26,7 @@ pub enum Elements {
     Include(Include),
     Element(Element),
     SimpleType(SimpleType),
-    ComplexType(ComplexType),
+    ComplexType(Box<ComplexType>),
 }
 
 #[derive(Debug)]
@@ -36,7 +36,7 @@ pub struct Parser {
 }
 
 impl Parser {
-    pub fn new<P: AsRef<Path>>(file_path: P) -> Result<Parser, Error> {
+    pub fn parse<P: AsRef<Path>>(file_path: P) -> Result<Self, Error> {
         let root_folder = match file_path.as_ref().parent() {
             Some(rf) => rf,
             None => return Err(Error::InvalidRootFolder),
@@ -51,7 +51,7 @@ impl Parser {
             root_folder: root_folder.to_path_buf(),
         };
 
-        parser.parse(doc.root())?;
+        parser.parse_node(doc.root())?;
 
         Ok(parser)
     }
@@ -64,7 +64,7 @@ impl Parser {
         Ok(contents)
     }
 
-    fn parse(&mut self, parent_node: Node) -> Result<(), Error> {
+    fn parse_node(&mut self, parent_node: Node) -> Result<(), Error> {
         for node in parent_node.children().filter(|n| match n.node_type() {
             roxmltree::NodeType::Element | roxmltree::NodeType::Root => true,
             _ => false,
@@ -74,7 +74,7 @@ impl Parser {
                     self.elements
                         .push(Elements::Schema(Schema::try_from(node)?));
 
-                    self.parse(node)?;
+                    self.parse_node(node)?;
                 }
 
                 IMPORT => {
@@ -86,7 +86,7 @@ impl Parser {
 
                         let doc = Document::parse(&contents)?;
 
-                        self.parse(doc.root())?;
+                        self.parse_node(doc.root())?;
                     }
 
                     self.elements.push(Elements::Import(import));
@@ -100,7 +100,7 @@ impl Parser {
 
                         let doc = Document::parse(&contents)?;
 
-                        self.parse(doc.root())?;
+                        self.parse_node(doc.root())?;
                     }
 
                     self.elements.push(Elements::Include(include));
@@ -111,9 +111,12 @@ impl Parser {
                 SIMPLE_TYPE => self
                     .elements
                     .push(Elements::SimpleType(SimpleType::try_from(node)?)),
-                COMPLEX_TYPE => self
-                    .elements
-                    .push(Elements::ComplexType(ComplexType::try_from(node)?)),
+                COMPLEX_TYPE => {
+                    self.elements
+                        .push(Elements::ComplexType(Box::new(ComplexType::try_from(
+                            node,
+                        )?)))
+                }
                 unknown => {
                     return Err(crate::errors::Error::UnhandledTag {
                         parent: parent_node.tag_name().name().to_owned(),

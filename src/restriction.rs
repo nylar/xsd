@@ -2,15 +2,15 @@ use crate::traits::TryFrom;
 
 use roxmltree::Node;
 
-const ENUMERATION: &'static str = "enumeration";
-const PATTERN: &'static str = "pattern";
-const LENGTH: &'static str = "length";
-const MIN_LENGTH: &'static str = "minLength";
-const MAX_LENGTH: &'static str = "maxLength";
-const MIN_INCLUSIVE: &'static str = "minInclusive";
-const MAX_INCLUSIVE: &'static str = "maxInclusive";
-const FRACTION_DIGITS: &'static str = "fractionDigits";
-const TOTAL_DIGITS: &'static str = "totalDigits";
+const ENUMERATION: &str = "enumeration";
+const PATTERN: &str = "pattern";
+const LENGTH: &str = "length";
+const MIN_LENGTH: &str = "minLength";
+const MAX_LENGTH: &str = "maxLength";
+const MIN_INCLUSIVE: &str = "minInclusive";
+const MAX_INCLUSIVE: &str = "maxInclusive";
+const FRACTION_DIGITS: &str = "fractionDigits";
+const TOTAL_DIGITS: &str = "totalDigits";
 
 #[derive(Debug, PartialEq)]
 pub enum Restrictions {

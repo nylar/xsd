@@ -40,7 +40,7 @@ impl fmt::Display for Error {
 impl error::Error for Error {
     fn description(&self) -> &str {
         match *self {
-            Error::UnhandledTag { parent: _, tag: _ } => "Unhandled tag",
+            Error::UnhandledTag { .. } => "Unhandled tag",
             Error::InvalidFinal => "Invalid final",
             Error::InvalidFinalDefault => "Invalid final default",
             Error::InvalidBlockDefault => "Invalid block default",

@@ -10,15 +10,15 @@ use crate::traits::TryFrom;
 
 use roxmltree::Node;
 
-const SEQUENCE: &'static str = "sequence";
-const ATTRIBUTE: &'static str = "attribute";
-const SIMPLE_CONTENT: &'static str = "simpleContent";
-const COMPLEX_CONTENT: &'static str = "complexContent";
-const ELEMENT: &'static str = "element";
-const ANY: &'static str = "any";
-const CHOICE: &'static str = "choice";
-const RESTRICTION: &'static str = "restriction";
-const EXTENSION: &'static str = "extension";
+const SEQUENCE: &str = "sequence";
+const ATTRIBUTE: &str = "attribute";
+const SIMPLE_CONTENT: &str = "simpleContent";
+const COMPLEX_CONTENT: &str = "complexContent";
+const ELEMENT: &str = "element";
+const ANY: &str = "any";
+const CHOICE: &str = "choice";
+const RESTRICTION: &str = "restriction";
+const EXTENSION: &str = "extension";
 
 #[derive(Debug, Default, PartialEq)]
 pub struct ComplexType {
@@ -210,20 +210,6 @@ impl<'a, 'd> TryFrom<Node<'a, 'd>> for Attribute {
             attribute.usage = Usage::from_str(usage)?;
         }
 
-        for child in node
-            .children()
-            .filter(|n| n.node_type() == roxmltree::NodeType::Element)
-        {
-            match child.tag_name().name() {
-                unknown => {
-                    return Err(crate::errors::Error::UnhandledTag {
-                        parent: node.tag_name().name().to_owned(),
-                        tag: unknown.to_owned(),
-                    })
-                }
-            }
-        }
-
         Ok(attribute)
     }
 }
@@ -302,7 +288,7 @@ pub struct SimpleContent {
 #[derive(Debug, PartialEq)]
 pub enum Content {
     Restriction(Restriction),
-    Extension(Extension),
+    Extension(Box<Extension>),
 }
 
 impl<'a, 'd> TryFrom<Node<'a, 'd>> for SimpleContent {
@@ -320,14 +306,12 @@ impl<'a, 'd> TryFrom<Node<'a, 'd>> for SimpleContent {
                 content: Content::Restriction(Restriction::try_from(child)?),
             }),
             EXTENSION => Ok(SimpleContent {
-                content: Content::Extension(Extension::try_from(child)?),
+                content: Content::Extension(Box::new(Extension::try_from(child)?)),
             }),
-            unknown => {
-                return Err(crate::errors::Error::UnhandledTag {
-                    parent: node.tag_name().name().to_owned(),
-                    tag: unknown.to_owned(),
-                })
-            }
+            unknown => Err(crate::errors::Error::UnhandledTag {
+                parent: node.tag_name().name().to_owned(),
+                tag: unknown.to_owned(),
+            }),
         }
     }
 }
@@ -352,14 +336,12 @@ impl<'a, 'd> TryFrom<Node<'a, 'd>> for ComplexContent {
                 content: Content::Restriction(Restriction::try_from(child)?),
             }),
             EXTENSION => Ok(ComplexContent {
-                content: Content::Extension(Extension::try_from(child)?),
+                content: Content::Extension(Box::new(Extension::try_from(child)?)),
             }),
-            unknown => {
-                return Err(crate::errors::Error::UnhandledTag {
-                    parent: node.tag_name().name().to_owned(),
-                    tag: unknown.to_owned(),
-                })
-            }
+            unknown => Err(crate::errors::Error::UnhandledTag {
+                parent: node.tag_name().name().to_owned(),
+                tag: unknown.to_owned(),
+            }),
         }
     }
 }

@@ -5,10 +5,10 @@ use crate::traits::TryFrom;
 
 use roxmltree::Node;
 
-const RESTRICTION: &'static str = "restriction";
-const ANNOTATION: &'static str = "annotation";
-const DOCUMENTATION: &'static str = "documentation";
-const APPINFO: &'static str = "appinfo";
+const RESTRICTION: &str = "restriction";
+const ANNOTATION: &str = "annotation";
+const DOCUMENTATION: &str = "documentation";
+const APPINFO: &str = "appinfo";
 
 #[derive(Debug, Default, PartialEq)]
 pub struct SimpleType {
